@@ -3,3 +3,7 @@
 ################################################################################
 
 /.vs/BaiduPushDemo
+/src/BaiduPushDemo/bin/Debug/netstandard2.0
+/src/BaiduPushDemo/obj
+/src/BaiduPushDemo.Android/bin/Debug
+/src/BaiduPushDemo.Android/obj
