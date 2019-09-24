@@ -7,18 +7,20 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
+using Android.Util;
 using Android.Views;
 using Android.Widget;
-using Baidu.Android.PushService;
+using Com.Baidu.Android.Pushservice;
+using static Android.Provider.MediaStore;
 
 namespace BaiduPushDemo.Droid
 {
-    [BroadcastReceiver(Label = "BaiduPushReceiver")]
-    [IntentFilter(new string[] {
-        "com.baidu.android.pushservice.action.MESSAGE",
-        "com.baidu.android.pushservice.action.RECEIVE",
-        "com.baidu.android.pushservice.action.notification.CLICK"
-    })]
+    //[BroadcastReceiver(Label = "BaiduPushReceiver")]
+    //[IntentFilter(new string[] {
+    //    "com.baidu.android.pushservice.action.MESSAGE",
+    //    "com.baidu.android.pushservice.action.RECEIVE",
+    //    "com.baidu.android.pushservice.action.notification.CLICK"
+    //})]
     public class BaiduPushReceiver : PushMessageReceiver
     {
         public static string mChannelId, mUserId;
@@ -27,13 +29,13 @@ namespace BaiduPushDemo.Droid
         /// Call this to initialize Baidu's push notification service for this device.
         /// 调用此功能开启百度推送通知服务。
         /// </summary>
-        public static void InitializeBaiduPushManager()
+        public static void InitializeBaiduPushManager(Context context)
         {
             string baiduPushApiKey = GetMetaDataValueByName("baidu_api_key");
 
             if (!string.IsNullOrWhiteSpace(baiduPushApiKey))
             {
-                PushManager.StartWork(Application.Context, PushConstants.LoginTypeApiKey, baiduPushApiKey);
+                PushManager.StartWork(context, PushConstants.LoginTypeApiKey, baiduPushApiKey);
             }
         }
 
@@ -131,7 +133,9 @@ namespace BaiduPushDemo.Droid
             }
             else
             {
+               
             }
+            //ProcessNotification(context,"");
             System.Diagnostics.Debug.WriteLine(" === OnNotificationArrived === {0} {1} {2}", title, description, customContent);
         }
 
@@ -145,6 +149,14 @@ namespace BaiduPushDemo.Droid
 
         public override void OnUnbind(Context context, int errorCode, string requestId)
         {
+        }
+
+        private void ProcessNotification(Context context, string content)
+        {
+            Intent intent = new Intent();
+            intent.SetClass(context.ApplicationContext, typeof(MainActivity));
+            intent.AddFlags(ActivityFlags.NewTask);
+            context.ApplicationContext.StartActivity(intent);
         }
     }
 }
